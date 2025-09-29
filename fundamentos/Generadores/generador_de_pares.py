@@ -1,5 +1,5 @@
 def generar_pares(n):
-    for i in range(n, 2):
+    for i in range(0, n, 2):
         yield i
 
 numeros_pares = generar_pares(10)
