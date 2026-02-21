@@ -9,7 +9,7 @@ def generador_inverso_compacto(lista):
     return (elemento for elemento in lista[::-1]) # Doblemente pythonico: slicing + expresiones generadoras
 
 # Prueba 1 (generador con yield)
-mi_lista = [i for i in range(1, 11)] # Otra forma tambien pythonica con list comprehensions
+mi_lista = range(1, 11) # Otra forma tambien pythonica con list comprehensions
 
 print("Despegue en: ")
 for elemento in generador_inverso(mi_lista):
