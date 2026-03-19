@@ -16,6 +16,10 @@ def encontrar_nodo(lista, posicion):
     Se garantiza que el parametro posicion siempre es valido.
     """
 
+    if posicion == lista.tamano-1: # Acceso rapido si se busca el ultimo nodo
+        return lista.cola
+
+
     posicion_actual = 0
     nodo_actual = lista.cabeza
 
@@ -31,6 +35,11 @@ def crear_lista_con_ciclo(valores, posicion_ciclo):
     Ej: valores=[1,2,3,4,5], posicion_ciclo=2 crea ciclo en nodo 3
     """
     
+    if posicion_ciclo < 0 or posicion_ciclo >= len(valores): # Validar posicion 0-based
+        print("Posicion invalida para el ciclo.")
+        return
+
+
     lista = build(valores)
     nodo_ciclo = encontrar_nodo(lista, posicion_ciclo)
 

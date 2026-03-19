@@ -1,6 +1,6 @@
 """ Ejercicio numero 1 de la serie de Linked Lists.
 
-Objetivo: Implementar una Singly Lined List con los siguientes metodos:
+Objetivo: Implementar una Singly Linked List con los siguientes metodos:
 
     - agregar_al_final
     - agregar_al_inicio
@@ -23,6 +23,7 @@ class Nodo:
 class SinglyLinkedList:
     def __init__(self):
         self.cabeza = None
+        self.cola = None
         self.tamano = 0
 
 
@@ -33,87 +34,126 @@ class SinglyLinkedList:
             nodo_actual = nodo_actual.siguiente
 
     def agregar_al_final(self, data):
+        """Agrega un nodo con valor data al final de la lista
+
+        Args:
+            data (any): Valor del nodo que sera anadido.
+        """
+
         nodo = Nodo(data)
 
         if self.cabeza is None:
             self.cabeza = nodo
-        
+            self.cola = nodo
+
         else:
-            for nodo_actual in self:
-                pass
-            nodo_actual.siguiente = nodo
-            self.tamano += 1
+            self.cola.siguiente = nodo
+            self.cola = nodo
+
+        self.tamano += 1
 
     def agregar_al_inicio(self, data):
+        """Agrega un nodo con valor data al inicio de la lista
+
+        Args:
+            data (any): Valor del nodo que sera anadido.
+        """
+
         nodo = Nodo(data)
         nodo.siguiente = self.cabeza
         self.cabeza = nodo
         self.tamano += 1
 
     def eliminar_por_valor(self, target_node_data):
+        """Elimina el primer nodo de izquierda a derecha cuyo valor coincida con el buscado.
+
+        Args:
+            target_node_data (any): Valor del nodo a eliminar.
+        """
+
         if self.cabeza is None:
             print("No es posible eliminar. La lista esta vacia.")
             return
+        
+        if self.cabeza.valor == target_node_data:
+            self.cabeza = None
+            self.cola = None
 
-        nodo_anterior = None
-        nodo_actual = self.cabeza
+        else:
+            nodo_anterior = None
+            nodo_actual = self.cabeza
+            encontrado = False
 
-        while nodo_actual is not None or nodo_actual.valor != target_node_data:
-            nodo_anterior = nodo_actual
-            nodo_actual = nodo_actual.siguiente
+            while nodo_actual.siguiente is not None:
+                if nodo_actual.valor == target_node_data:
+                    encontrado = True
+                    nodo_anterior.siguiente = nodo_actual.siguiente
 
-        if nodo_actual is None:
-            print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
-            return
+                    if nodo_actual == self.cola:
+                        self.cola = nodo_anterior
 
-        nodo_anterior = nodo_actual.siguiente
-        nodo_actual = None
+                    break
+
+                nodo_anterior = nodo_actual
+                nodo_actual = nodo_actual.siguiente
+
+            if not encontrado:
+                print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
+                return
+
+    
         self.tamano -= 1
 
     def buscar(self, target_node_data):
-        if self.cabeza is None:
-            return False
+        """Busca un nodo en la lista por su valor.
 
-        nodo_actual = self.cabeza
-        while nodo_actual is not None or nodo_actual.valor != target_node_data:
-            nodo_actual = nodo_actual.siguiente
-        
-        return False if nodo_actual is None else True
+        Args:
+            target_node_data (any): Valor del nodo buscado.
+
+        Returns:
+            bool: Devuelve True si el nodo ha sido encontrado y False de lo contrario.
+        """
+
+        if self.cabeza is None:
+            print("La lista esta vacia.")
+            return
+
+        return any(nodo.valor == target_node_data for nodo in self)
 
     def obtener_tamano(self):
         return self.tamano
 
     def imprimir(self):
+        """ Imprime los valores de los nodos de la lista en formato legible. """
+
         if self.cabeza is None:
+            print("La lista esta vacia.")
             return
 
         nodos = []
-
         for nodo_actual in self:
             nodos.append(str(nodo_actual.valor))
-            nodo_actual = nodo_actual.siguiente
         
         print(" -> ".join(nodos))
 
     def invertir(self):
+        """ Invierte la lista in-place usando punteros a los nodos. """
+
         if self.cabeza is None:
+            print("La lista esta vacia.")
             return
-
-        nodos = []
-
-        for nodo_actual in self:
-            nodos.append(nodo_actual)
-            nodo_actual = nodo_actual.siguiente
-
-        nodos.reverse()
-        self.cabeza = nodos[0]
-
-        for i in range(self.tamano-1):
-            nodos[i].siguiente = nodos[i+1]
         
-        nodos[-1].siguiente = None
+        anterior, actual = None, self.cabeza
+        while actual != self.cola:
+            siguiente_temp = actual.siguiente
+            actual.siguiente = anterior
+            anterior = actual
+            actual = siguiente_temp
 
-        
+        cola_antigua = self.cola
+        self.cola = self.cabeza
+        self.cabeza = anterior
+        self.agregar_al_inicio(cola_antigua)
 
 # Pruebas
 
@@ -122,4 +162,5 @@ llist.agregar_al_final(10)
 llist.agregar_al_final(20)
 llist.agregar_al_final(30)
 llist.agregar_al_inicio(5)
+llist.invertir()
 llist.imprimir()

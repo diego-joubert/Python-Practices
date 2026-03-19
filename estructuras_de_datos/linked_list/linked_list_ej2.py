@@ -28,6 +28,12 @@ class DoublyLinkedList:
             nodo_actual = nodo_actual.siguiente
 
     def agregar_al_final(self, data):
+        """Agrega un nodo con valor data al final de la lista
+
+        Args:
+            data (any): Valor del nodo que sera anadido.
+        """
+
         nodo = Nodo(data)
 
         if self.cabeza is None:
@@ -42,6 +48,12 @@ class DoublyLinkedList:
         self.tamano += 1
 
     def agregar_al_inicio(self, data):
+        """Agrega un nodo con valor data al inicio de la lista
+
+        Args:
+            data (any): Valor del nodo que sera anadido.
+        """
+
         nodo = Nodo(data)
 
         if self.cabeza is None:
@@ -56,61 +68,92 @@ class DoublyLinkedList:
         self.tamano += 1
 
     def eliminar_por_valor(self, target_node_data):
+        """Elimina el primer nodo de izquierda a derecha cuyo valor coincida con el buscado.
+
+        Args:
+            target_node_data (any): Valor del nodo a eliminar.
+        """
+
         if self.cabeza is None:
             print("Lista vacia. No es posible eliminar.")
             return
+        
+        encontrado = False
 
         if target_node_data == self.cabeza.valor:
+             encontrado = True
              self.cabeza = self.cabeza.siguiente
-             self.cabeza.anterior = None
-             self.tamano -= 1
+             if self.tamano > 1:
+                self.cabeza.anterior = None
+                
         elif target_node_data == self.cola.valor:
+            encontrado = True
             self.cola = self.cola.anterior
-            self.cola.siguiente = None
-            self.tamano -= 1
+            if self.tamano > 1:
+                self.cola.siguiente = None
+                
         else:
             for nodo_actual in self:
                 if nodo_actual.valor == target_node_data:
+                    encontrado = True
                     nodo_actual.anterior.siguiente = nodo_actual.siguiente
                     nodo_actual.siguiente.anterior = nodo_actual.anterior
-                    self.tamano -= 1
-                    return
+                    break
+
+        if not encontrado:
+            print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
+            return
+        
+        self.tamano -= 1
 
     def eliminar_desde_final(self, posicion):
+        """Dada una posicion, elimina el nodo en esa posicion contando desde el final. 
+
+        Args:
+            posicion (int): Posicion o indice del nodo a eliminar.
+        """
+
         if self.cabeza is None:
             print("Lista vacia. No es posible eliminar.")
             return
 
-        elif posicion < 1 or posicion > self.tamano:
+        if posicion < 1 or posicion > self.tamano:
             print("Posicion invalida.")
             return
+        
+        if posicion == 1 and self.tamano == 1:
+            self.cabeza = None
+            self.cola = None
 
         elif posicion == 1:
             self.cola = self.cola.anterior
             self.cola.siguiente = None
-            self.tamano -= 1
-            return
 
         elif posicion == self.tamano:
             self.cabeza = self.cabeza.siguiente
             self.cabeza.anterior = None
-            return
 
+        else:
+            posicion_actual = 1
+            nodo_actual = self.cola
 
-        posicion_actual = 1
-        nodo_actual = self.cola
+            while nodo_actual.anterior is not None:
+                if posicion_actual == posicion:
+                    nodo_actual.anterior.siguiente = nodo_actual.siguiente
+                    nodo_actual.siguiente.anterior = nodo_actual.anterior
+                    break
 
-        while nodo_actual.anterior is not None:
-            if posicion_actual == posicion:
-                nodo_actual.anterior.siguiente = nodo_actual.siguiente
-                nodo_actual.siguiente.anterior = nodo_actual.anterior
-                self.tamano -= 1
-                return
+                posicion_actual += 1
+                nodo_actual = nodo_actual.anterior
 
-            posicion_actual += 1
-            nodo_actual = nodo_actual.anterior
+        self.tamano -= 1
 
     def es_palindromo(self):
+        """Comprueba si la lista es palindroma, es decir, si es la misma lista que su inverso.
+
+        Returns:
+            bool: Devuelve True si es palindroma y False de lo contrario.
+        """
         if self.cabeza is None:
             print("La lista esta vacia.")
             return
@@ -118,7 +161,7 @@ class DoublyLinkedList:
         puntero_izquierdo = self.cabeza
         puntero_derecho = self.cola
 
-        while puntero_izquierdo != self.cola and puntero_derecho != self.cabeza:
+        while puntero_izquierdo != puntero_derecho:
             if puntero_izquierdo.valor != puntero_derecho.valor:
                 return False
 
@@ -128,6 +171,8 @@ class DoublyLinkedList:
         return True
 
     def imprimir(self):
+        """ Imprime los valores de los nodos de la lista en formato legible. """
+
         if self.cabeza is None:
             return
 

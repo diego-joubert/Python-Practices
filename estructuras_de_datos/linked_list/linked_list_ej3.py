@@ -1,7 +1,7 @@
-from linked_list_ej1 import SinglyLinkedList
+from linked_list_ej1 import Nodo, SinglyLinkedList
 
 
-inf = 10**18
+inf = float('inf')
 
 def rellenar(lista, tamano_objetivo):
     for _ in range(tamano_objetivo - lista.obtener_tamano()):
@@ -17,21 +17,27 @@ def merge_sorted_lists(l1, l2):
     Resultado: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> None
     """
 
-    if l1.obtener_tamano() < l2.obtener_tamano():
-        rellenar(l1, l2.obtener_tamano())
-    else:
-        rellenar(l2, l1.obtener_tamano())
+    dummy = Nodo(None)
+    tail = dummy
+    p1 = l1.cabeza
+    p2 = l2.cabeza
+
+    while p1 and p2:
+        if p1.valor < p2.valor:
+            tail.siguiente = p1
+            p1 = p1.siguiente
+        else:
+            tail.siguiente = p2
+            p2 = p2.siguiente
+        tail = tail.siguiente
+
+    if p1:
+        tail.siguiente = p1
+    if p2:
+        tail.siguiente = p2
 
     resultado = SinglyLinkedList()
-
-    for nodo1, nodo2 in zip(l1, l2):
-        if nodo1.valor < nodo2.valor:
-            if nodo1.valor != inf: resultado.agregar_al_final(nodo1)
-            if nodo2.valor != inf: resultado.agregar_al_final(nodo2)
-        else:
-            if nodo2.valor != inf: resultado.agregar_al_final(nodo2)
-            if nodo1.valor != inf: resultado.agregar_al_final(nodo1)
-
+    resultado.cabeza = dummy.siguiente
     return resultado
 
 # Vamos a probar a ver si funciona
