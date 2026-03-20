@@ -78,33 +78,27 @@ class DoublyLinkedList:
             print("Lista vacia. No es posible eliminar.")
             return
         
-        encontrado = False
 
         if target_node_data == self.cabeza.valor:
-             encontrado = True
-             self.cabeza = self.cabeza.siguiente
-             if self.tamano > 1:
+            self.cabeza = self.cabeza.siguiente
+            if self.cabeza is None:
+                self.cola = None
+            else:
                 self.cabeza.anterior = None
-                
-        elif target_node_data == self.cola.valor:
-            encontrado = True
-            self.cola = self.cola.anterior
-            if self.tamano > 1:
-                self.cola.siguiente = None
-                
-        else:
-            for nodo_actual in self:
-                if nodo_actual.valor == target_node_data:
-                    encontrado = True
-                    nodo_actual.anterior.siguiente = nodo_actual.siguiente
-                    nodo_actual.siguiente.anterior = nodo_actual.anterior
-                    break
-
-        if not encontrado:
-            print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
+            self.tamano -= 1
             return
+            
+                
+        for nodo_actual in self:
+            if nodo_actual.valor == target_node_data:
+                nodo_actual.anterior.siguiente = nodo_actual.siguiente
+                nodo_actual.siguiente.anterior = nodo_actual.anterior
+                self.tamano -= 1
+                return
+
         
-        self.tamano -= 1
+        print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
+        
 
     def eliminar_desde_final(self, posicion):
         """Dada una posicion, elimina el nodo en esa posicion contando desde el final. 
@@ -154,20 +148,18 @@ class DoublyLinkedList:
         Returns:
             bool: Devuelve True si es palindroma y False de lo contrario.
         """
+
         if self.cabeza is None:
-            print("La lista esta vacia.")
-            return
+            print("La lista está vacía.")
+            return False
         
-        puntero_izquierdo = self.cabeza
-        puntero_derecho = self.cola
-
-        while puntero_izquierdo != puntero_derecho:
-            if puntero_izquierdo.valor != puntero_derecho.valor:
+        izquierdo = self.cabeza
+        derecho = self.cola
+        while izquierdo and derecho and izquierdo != derecho and izquierdo.anterior != derecho:
+            if izquierdo.valor != derecho.valor:
                 return False
-
-            puntero_izquierdo = puntero_izquierdo.siguiente
-            puntero_derecho  = puntero_derecho.anterior
-
+            izquierdo = izquierdo.siguiente
+            derecho = derecho.anterior
         return True
 
     def imprimir(self):

@@ -1,12 +1,5 @@
 from linked_list_ej1 import Nodo, SinglyLinkedList
 
-
-inf = float('inf')
-
-def rellenar(lista, tamano_objetivo):
-    for _ in range(tamano_objetivo - lista.obtener_tamano()):
-        lista.agregar_al_final(inf)
-
 def merge_sorted_lists(l1, l2):
     """
     Combina dos listas ordenadas en una sola lista ordenada.
@@ -21,7 +14,7 @@ def merge_sorted_lists(l1, l2):
     tail = dummy
     p1 = l1.cabeza
     p2 = l2.cabeza
-
+    contador = 0
     while p1 and p2:
         if p1.valor < p2.valor:
             tail.siguiente = p1
@@ -30,14 +23,21 @@ def merge_sorted_lists(l1, l2):
             tail.siguiente = p2
             p2 = p2.siguiente
         tail = tail.siguiente
-
+        contador += 1
     if p1:
         tail.siguiente = p1
+        while tail.siguiente:
+            tail = tail.siguiente
+            contador += 1
     if p2:
         tail.siguiente = p2
-
+        while tail.siguiente:
+            tail = tail.siguiente
+            contador += 1
     resultado = SinglyLinkedList()
     resultado.cabeza = dummy.siguiente
+    resultado.cola = tail
+    resultado.tamano = contador
     return resultado
 
 # Vamos a probar a ver si funciona

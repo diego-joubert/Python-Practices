@@ -76,33 +76,36 @@ class SinglyLinkedList:
             return
         
         if self.cabeza.valor == target_node_data:
-            self.cabeza = None
-            self.cola = None
+            self.cabeza = self.cabeza.siguiente
+            if self.cabeza is None:
+                self.cola = None
+            self.tamano -= 1
+            return
 
         else:
             nodo_anterior = None
             nodo_actual = self.cabeza
-            encontrado = False
 
-            while nodo_actual.siguiente is not None:
+            while nodo_actual:
                 if nodo_actual.valor == target_node_data:
-                    encontrado = True
-                    nodo_anterior.siguiente = nodo_actual.siguiente
+                    if nodo_anterior:
+                        nodo_anterior.siguiente = nodo_actual.siguiente
 
-                    if nodo_actual == self.cola:
-                        self.cola = nodo_anterior
+                        if nodo_actual == self.cola:
+                            self.cola = nodo_anterior
 
-                    break
+                    else:
+                        self.cabeza = self.cabeza.siguiente
+                        if self.cabeza is None:
+                            self.cola = None
+                    self.tamano -= 1
+                    return
+                
 
                 nodo_anterior = nodo_actual
                 nodo_actual = nodo_actual.siguiente
 
-            if not encontrado:
-                print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
-                return
-
-    
-        self.tamano -= 1
+            print(f"El nodo con valor {target_node_data} no ha sido encontrado.")
 
     def buscar(self, target_node_data):
         """Busca un nodo en la lista por su valor.
@@ -143,17 +146,15 @@ class SinglyLinkedList:
             print("La lista esta vacia.")
             return
         
-        anterior, actual = None, self.cabeza
-        while actual != self.cola:
-            siguiente_temp = actual.siguiente
+        anterior = None
+        actual = self.cabeza
+        self.cola = actual
+        while actual:
+            siguiente = actual.siguiente
             actual.siguiente = anterior
             anterior = actual
-            actual = siguiente_temp
-
-        cola_antigua = self.cola
-        self.cola = self.cabeza
+            actual = siguiente
         self.cabeza = anterior
-        self.agregar_al_inicio(cola_antigua)
 
 # Pruebas
 
